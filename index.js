@@ -60,8 +60,8 @@ app.get('/', (req, res) => {
 // =======================
 
 
-app.listen(port, hostname, () => {
-    console.log('Magic happens at http://' + hostname + ':' + port);
+app.listen(port, () => {
+    console.log('Magic happens at http://localhost:' + port);
 });
 
 app.get('/user', (req, res) => {
