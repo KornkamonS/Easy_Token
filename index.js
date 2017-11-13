@@ -50,7 +50,13 @@ app.get('/', (req, res) => {
         });
     });
 });
+app.post('/signup', function(req, res) {
+    Users.signupByAPI(req, res);
+});
 
+app.post('/login', function(req, res) {
+    Users.loginByAPI(req, res);
+});
 
 // API ROUTES -------------------
 // we'll get to these in a second
@@ -105,13 +111,7 @@ app.use(function(req, res, next) {
     }
 });
 
-app.post('/signup', function(req, res) {
-    Users.signupByAPI(req, res);
-});
 
-app.post('/login', function(req, res) {
-    Users.loginByAPI(req, res);
-});
 
 app.post('/user', function(req, res) {
 
