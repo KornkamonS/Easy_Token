@@ -1,0 +1,33 @@
+ปัญหาของ server base authen
+-scale ไม่ได้ ต้องอยู่ server ใด server นั้นเมื่อ Login
+-secure
+token
+-after login ,server create token and send to client 
+    (Token is a encrypt file)
+    client must keep token by it selt
+-when use ,client must attach token in html request (may be in Header or body)
+-token may be have expire date
+-token can send to other client ,pass to the thridth party apps
+pros
+-stateless and scale server
+-no cookie
+-pass to 3 party apps
+-no cookie
+
+token has 3 part
+-Header
+    บอกว่า encrypt ด้วยไร
+    type
+-payload
+    data
+    expire
+    domain name
+    permission
+-signature
+    encrypt สองส่วนข้างบนด้วย HMACSHA256 
+แล้วส่ง ไปให้ client
+client แค่เก็บแล้วแนบมากลับ request
+
+สร้างด้วย sign
+ถอดกลับด้วย verified 
+

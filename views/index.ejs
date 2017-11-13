@@ -1,0 +1,33 @@
+<%include header %>
+    <H2>Add New Customer:</H2>
+    <form method="POST" action="/user/add">
+        <label>Full Name</label><br>
+        <input type="text" name="name">
+        <br>
+        <label>Age</label><br>
+        <input type="number" name="age">
+        <br>
+        <label>Email</label><br>
+        <input type="text" name="email">
+        <br><br>
+        <input type="submit" value="Add">
+    </form>
+    <!--<form method="DELETE" action="/user/delete">
+        <label>ID</label><br>
+        <input type="text" name="id">
+        <input type="submit" value="DELETE">
+    </form>-->
+    <hr>
+    <H2>
+        <%= title %>
+    </H2>
+    <ul>
+        <% users.forEach((user)=>{ %>
+        <li> [<%= user.id%>] 
+        <%= user.name%>
+        (<%= user.age %>)
+        - <%= user.email %>
+        </li>
+         <% }); %>
+    </ul>
+    <%include footer %>
