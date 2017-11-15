@@ -46,7 +46,7 @@ exports.loginByAPI = function(req, res) {
                 var token = jwt.sign(payload, config.secret, {
                     expiresIn: 86400 // expires in 24 hours
                 });
-                res.cookie('auth', token);
+                // res.cookie('auth', token);
                 return res.json({
                     success: true,
                     message: 'Enjoy your token!',

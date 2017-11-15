@@ -6,8 +6,8 @@ var app = express();
 var path = require('path')
 var bodyParser = require('body-parser');
 var morgan = require('morgan');
-var cookieParser = require('cookie-parser')
-app.use(cookieParser())
+// var cookieParser = require('cookie-parser')
+// app.use(cookieParser())
 var mongoose = require('mongoose');
 
 var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
@@ -30,7 +30,7 @@ app.use(bodyParser.json());
 
 // use morgan to log requests to the console
 app.use(morgan('dev'));
-// app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public')));
 
 /* setup view engine */
 app.set('view engine', 'ejs');
@@ -89,7 +89,7 @@ app.use(function(req, res, next) {
     // if token is valid, continue to the specified sensitive route
     // if token is NOT valid, return error message
     // read a token from body or urlencoded or header (key = x-access-token)
-    var token = req.body.token || req.query.token || req.headers['x-access-token'] || req.cookies.auth;
+    var token = req.body.token || req.query.token || req.headers['x-access-token'] // || req.cookies.auth;
     console.log('print0')
     if (token) {
         jwt.verify(token, config.secret, function(err, decoded) {
@@ -111,7 +111,25 @@ app.use(function(req, res, next) {
     }
 });
 
+//On web
+app.post('/user/add', function(req, res) {
 
+    var newUser = {
+        name: req.body.name,
+        age: parseInt(req.body.age),
+        email: req.body.email
+    }
+    Users.insertOnWeb(req, res, newUser);
+    id = data[data.length - 1].id + 1;
+    newUser.id = id;
+    data.push(newUser);
+    res.render('index', { // render ‘views/index.ejs’
+        title: "Customer List:",
+        users: data
+    });
+
+
+});
 
 app.post('/user', function(req, res) {
 
@@ -157,38 +175,3 @@ app.put('/user/:id', function(req, res) {
     }
 
 });
-
-
-
-//On web
-app.post('/user/add', function(req, res) {
-
-    var newUser = {
-        name: req.body.name,
-        age: parseInt(req.body.age),
-        email: req.body.email
-    }
-    Users.insertOnWeb(req, res, newUser);
-    id = data[data.length - 1].id + 1;
-    newUser.id = id;
-    data.push(newUser);
-    res.render('index', { // render ‘views/index.ejs’
-        title: "Customer List:",
-        users: data
-    });
-
-
-});
-// app.delete('/user/delete', function(req, res) {
-
-//     var uid = req.body.id;
-//     Users.deleteByAPI(req, res, uid)
-
-//     data.remove({ id: uid });
-//     res.render('index', { // render ‘views/index.ejs’
-//         title: "Customer List:",
-//         users: data
-//     });
-
-
-// });
