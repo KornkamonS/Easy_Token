@@ -41,6 +41,7 @@ app.set('views', path.join(__dirname, 'views'));
 // basic route
 var data = [];
 app.get('/', (req, res) => {
+    let data = app.get('/user');
     User.find((err, users) => {
         data = users;
         if (err) throw err;
@@ -90,7 +91,7 @@ app.use(function(req, res, next) {
     // if token is NOT valid, return error message
     // read a token from body or urlencoded or header (key = x-access-token)
     var token = req.body.token || req.query.token || req.headers['x-access-token'] // || req.cookies.auth;
-    console.log('print0')
+
     if (token) {
         jwt.verify(token, config.secret, function(err, decoded) {
             if (err) {
@@ -112,14 +113,17 @@ app.use(function(req, res, next) {
 });
 
 //On web
-app.post('/user/add', function(req, res) {
+app.post('/', function(req, res) {
 
     var newUser = {
         name: req.body.name,
         age: parseInt(req.body.age),
         email: req.body.email
     }
-    Users.insertOnWeb(req, res, newUser);
+
+    Users.insertOnWeb(req, res, newUser, (err) => {
+        console.log(err);
+    });
     id = data[data.length - 1].id + 1;
     newUser.id = id;
     data.push(newUser);
@@ -166,7 +170,7 @@ app.put('/user/:id', function(req, res) {
     if (req.decoded.admin) // check admin authorization
     {
         var uid = req.params.id;
-        Users.putByAPI(req, res, uid)
+        Users.EditByAPI(req, res, uid)
     } else {
         res.status(401).json({ // if not an admin user, return
             success: false, // an error message

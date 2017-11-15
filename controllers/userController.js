@@ -132,6 +132,7 @@ exports.insertByAPI = function(req, res, userDetail) {
     });
 }
 exports.insertOnWeb = function(req, res, userDetail) {
+
     User.find({}).sort({ id: -1 }).limit(1).exec((err, users) => {
         if (err) throw err;
         if (users && users.length != 0) {
@@ -144,41 +145,59 @@ exports.insertOnWeb = function(req, res, userDetail) {
             newUser.save();
         }
     });
+
 }
 exports.deleteByAPI = function(req, res, uid) {
-    User.remove({ id: uid }, (err, users) => {
-        if (err) return res.json({
-            success: false,
-            message: 'Unable to deleted user!',
-        });
+    User.findOne({ id: uid }, (err, user) => {
+        if (user) {
+            user.remove((err, users) => {
+                if (err) return res.json({
+                    success: false,
+                    message: 'Unable to deleted user!',
+                });
 
-        return res.json({
-            success: true,
-            message: 'user has been deleted',
-        });
+                return res.json({
+                    success: true,
+                    message: 'user has been deleted',
+                });
+            });
+        } else {
+            return res.json({
+                success: false,
+                message: 'user not found ',
+            })
+        }
     });
+
 }
-exports.putByAPI = function(req, res, uid) {
+exports.EditByAPI = function(req, res, uid) {
     User.find({ id: uid }, (err, users) => {
         if (err) return res.json({
             success: false,
             message: 'Unable to edit user!',
         });
-        users[0].name = req.body.name ? req.body.name : users[0].name;
-        users[0].age = req.body.age ? req.body.age : users[0].age;
-        users[0].email = req.body.email ? req.body.email : users[0].email;
+        if (users.length != 0) {
+            users[0].name = req.body.name ? req.body.name : users[0].name;
+            users[0].age = req.body.age ? req.body.age : users[0].age;
+            users[0].email = req.body.email ? req.body.email : users[0].email;
 
-        users[0].save(function(err) {
-            if (err) {
+            users[0].save(function(err) {
+                if (err) {
+                    return res.json({
+                        success: false,
+                        message: 'Unable to save user!'
+                    })
+                }
                 return res.json({
-                    success: false,
-                    message: 'Unable to save user!'
-                })
-            }
+                    success: true,
+                    message: 'user has been edit',
+                });
+            })
+        } else {
             return res.json({
-                success: true,
-                message: 'user has been edit',
+                success: false,
+                message: 'user not found',
             });
-        })
+        }
     });
 }
