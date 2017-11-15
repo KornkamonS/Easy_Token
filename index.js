@@ -41,7 +41,6 @@ app.set('views', path.join(__dirname, 'views'));
 // basic route
 var data = [];
 app.get('/', (req, res) => {
-    let data = app.get('/user');
     User.find((err, users) => {
         data = users;
         if (err) throw err;
